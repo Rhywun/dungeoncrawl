@@ -47,8 +47,11 @@ pub fn player_input(
         };
 
         if delta.x != 0 || delta.y != 0 {
+            // This means something like "get all the points that have the
+            // player."
             let mut players =
                 <&mut Point>::query().filter(component::<Player>());
+
             players.iter_mut(ecs).for_each(|pos| {
                 let destination = *pos + delta;
                 if map.can_enter_tile(destination) {
