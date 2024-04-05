@@ -27,18 +27,10 @@ pub fn player_input(
         }
 
         let delta = match key {
-            VirtualKeyCode::Left
-            | VirtualKeyCode::A
-            | VirtualKeyCode::Numpad4 => Point::new(-1, 0),
-            VirtualKeyCode::Right
-            | VirtualKeyCode::D
-            | VirtualKeyCode::Numpad6 => Point::new(1, 0),
-            VirtualKeyCode::Up
-            | VirtualKeyCode::W
-            | VirtualKeyCode::Numpad8 => Point::new(0, -1),
-            VirtualKeyCode::Down
-            | VirtualKeyCode::S
-            | VirtualKeyCode::Numpad2 => Point::new(0, 1),
+            VirtualKeyCode::Left | VirtualKeyCode::A | VirtualKeyCode::Numpad4 => Point::new(-1, 0),
+            VirtualKeyCode::Right | VirtualKeyCode::D | VirtualKeyCode::Numpad6 => Point::new(1, 0),
+            VirtualKeyCode::Up | VirtualKeyCode::W | VirtualKeyCode::Numpad8 => Point::new(0, -1),
+            VirtualKeyCode::Down | VirtualKeyCode::S | VirtualKeyCode::Numpad2 => Point::new(0, 1),
             VirtualKeyCode::Numpad7 => Point::new(-1, -1),
             VirtualKeyCode::Numpad9 => Point::new(1, -1),
             VirtualKeyCode::Numpad1 => Point::new(-1, 1),
@@ -49,8 +41,7 @@ pub fn player_input(
         if delta.x != 0 || delta.y != 0 {
             // This means something like "get all the points that have the
             // player."
-            let mut players =
-                <&mut Point>::query().filter(component::<Player>());
+            let mut players = <&mut Point>::query().filter(component::<Player>());
 
             players.iter_mut(ecs).for_each(|pos| {
                 let destination = *pos + delta;
