@@ -29,5 +29,6 @@ pub fn spawn_monster(
                 _ => to_cp437('g'), // goblin
             },
         },
+        MovingRandomly {},
     ));
 }
