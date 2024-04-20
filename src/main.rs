@@ -1,6 +1,8 @@
 use prelude::*;
 
-use crate::systems::{build_input_scheduler, build_monster_scheduler, build_player_scheduler};
+use crate::systems::{
+    build_input_scheduler, build_monster_scheduler, build_player_scheduler,
+};
 
 mod camera;
 mod components;
@@ -12,9 +14,9 @@ mod turn_state;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
-    pub use legion::*;
     pub use legion::systems::CommandBuffer;
     pub use legion::world::SubWorld;
+    pub use legion::*;
 
     pub use crate::camera::*;
     pub use crate::components::*;
@@ -73,13 +75,18 @@ impl State {
 impl GameState for State {
     /// These steps execute during every pass through the game loop.
     fn tick(&mut self, ctx: &mut BTerm) {
-        // Clear both layers
+        // Clear all layers
         ctx.set_active_console(0);
         ctx.cls();
         ctx.set_active_console(1);
         ctx.cls();
+        ctx.set_active_console(2);
+        ctx.cls();
 
+        // Add keyboard and mouse position resources.
         self.resources.insert(ctx.key);
+        ctx.set_active_console(0);
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
 
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
         match current_state {
@@ -108,8 +115,19 @@ fn main() -> BError {
         .with_tile_dimensions(32, 32)
         .with_resource_path("resources/")
         .with_font("dungeonfont.png", 32, 32)
+        // TODO: Try Biasam instead?
+        .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
-        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
+        .with_simple_console_no_bg(
+            DISPLAY_WIDTH,
+            DISPLAY_HEIGHT,
+            "dungeonfont.png",
+        )
+        .with_simple_console_no_bg(
+            SCREEN_WIDTH * 2,
+            SCREEN_HEIGHT * 2,
+            "terminal8x8.png",
+        )
         .build()?;
     main_loop(context, State::new())
 }
